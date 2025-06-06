@@ -58,8 +58,8 @@ async def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db
             shutil.copyfileobj(file.file, buffer)
             
         result, matched_data, matched = analyze_file(stored_path)
-        print("In upload_file: \n", result, matched_data, matched)
-        if result["accepted_records"] == 0 or not matched or result["matched_columns"] == {} or result["status"] == "Rejected":
+        
+        if result["matched_columns"] == {}:
             save_rejected_files(file_name=file.filename, db=db)
             raise HTTPException(status_code=400, detail="File analysis failed or no matched columns found.")
         matched_data = matched_data.copy()
