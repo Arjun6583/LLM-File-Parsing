@@ -8,7 +8,7 @@ from services.fetch_data import get_file_metadata, get_mapped_data
 
 router = APIRouter()
 @router.get("/all-file-metadata")
-async def get_all_file_metadata(db: Session = Depends(get_db)):
+def get_all_file_metadata(db: Session = Depends(get_db)):
     """
     Fetches metadata for all files that have user-mapped data.
     This endpoint retrieves a list of files that have been processed and mapped to user data,

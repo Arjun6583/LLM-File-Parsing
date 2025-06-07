@@ -57,7 +57,7 @@ async def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db
         with open(stored_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
             
-        result, matched_data, matched = analyze_file(stored_path)
+        result, matched_data, matched = await analyze_file(stored_path)
         
         if result["matched_columns"] == {}:
             save_rejected_files(file_name=file.filename, db=db)
@@ -82,7 +82,7 @@ async def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db
         col = {key for key, val in t.items() if isinstance(val, (str, int, float)) and val != "-"}
         missing_columns = [key for key in schema_mapping.keys() if key not in col]
         
-        file_id = save_file_analysis_to_db(file_name=file.filename, file_type=file_type, status=result["status"], total_records=result["total_records"], unmatched_columns=result["unmatched_columns"], matched_columns=result["matched_columns"], mapped_data=matched_data.to_dict(orient="records"), missing_columns=missing_columns, db = db)
+        file_id = await save_file_analysis_to_db(file_name=file.filename, file_type=file_type, status=result["status"], total_records=result["total_records"], unmatched_columns=result["unmatched_columns"], matched_columns=result["matched_columns"], mapped_data=matched_data.to_dict(orient="records"), missing_columns=missing_columns, db = db)
         
         return {
             "file_id": file_id,

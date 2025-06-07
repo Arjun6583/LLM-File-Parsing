@@ -9,7 +9,7 @@ router = APIRouter()
 
 
 @router.post("/submit-columns")
-def submit_columns(request: ColumnMappingRequest, db: Session = Depends(get_db)):
+async def submit_columns(request: ColumnMappingRequest, db: Session = Depends(get_db)):
     """
     Submit column mappings and process the corresponding file data.
 
@@ -39,7 +39,7 @@ def submit_columns(request: ColumnMappingRequest, db: Session = Depends(get_db))
         dict: JSON response with a status and message indicating success or failure.
     """
     try:
-        response = save_submit_columns_data(request, db)
+        response = await save_submit_columns_data(request, db)
         return response
     except HTTPException as he:
         print(f"HTTPException: {str(he.detail)}")
